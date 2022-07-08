@@ -112,8 +112,6 @@ class DataLoader {
 	}
 }
 
-@Getter
-@Setter
 @RestController
 @RequestMapping("/greeting")
 class Greeting {
