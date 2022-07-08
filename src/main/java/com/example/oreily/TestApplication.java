@@ -1,4 +1,4 @@
-package com.example.oreily_test;
+package com.example.oreily;
 
 import lombok.Getter;
 import lombok.Setter;
