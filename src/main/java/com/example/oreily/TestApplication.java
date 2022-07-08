@@ -2,6 +2,7 @@ package com.example.oreily;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.repository.CrudRepository;
@@ -108,5 +109,19 @@ class DataLoader {
 				new Coffee("Café Lareño"),
 				new Coffee("Café Três Pontas")
 		));
+	}
+}
+
+@Getter
+@Setter
+@RestController
+@RequestMapping("/greeting")
+class Greeting {
+	@Value("${greeting-name: Mirage}")
+	private String name;
+
+	@GetMapping
+	public String getName() {
+		return name;
 	}
 }
