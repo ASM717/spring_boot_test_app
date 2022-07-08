@@ -112,11 +112,21 @@ class DataLoader {
 	}
 }
 
+// Mirage — для случаев, когда
+// переменная не описана в объекте Environment приложения
 @RestController
 @RequestMapping("/greeting")
 class Greeting {
 	@Value("${greeting-name: Mirage}")
 	private String name;
+
+	@Value("${greeting-coffee:}")
+	private String coffee;
+
+	@GetMapping("/coffee")
+	public String getNameAndCoffee() {
+		return coffee;
+	}
 
 	@GetMapping
 	public String getName() {
