@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,11 @@ public class TestApplication {
 		SpringApplication.run(TestApplication.class, args);
 	}
 
+	@Bean
+	@ConfigurationProperties(prefix = "droid")
+	Droid createDroid() {
+		return new Droid();
+	}
 }
 
 @Getter
@@ -114,52 +120,4 @@ class DataLoader {
 	}
 }
 
-// Mirage — для случаев, когда
-// переменная не описана в объекте Environment приложения
-@RestController
-//@RequestMapping("/greeting")
-@ConfigurationProperties(prefix = "greeting")
-class Greeting {
-	@Value("${greeting-name: Mirage}")
-	private String name;
 
-	@Value("${greeting-coffee:}")
-	private String coffee;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCoffee() {
-		return coffee;
-	}
-
-	public void setCoffee(String coffee) {
-		this.coffee = coffee;
-	}
-}
-
-@RestController
-@RequestMapping("/greeting")
-class GreetingController {
-	private final Greeting greeting;
-
-
-	GreetingController(Greeting greeting) {
-		this.greeting = greeting;
-	}
-
-	@GetMapping
-	String getGreeting() {
-		return greeting.getName();
-	}
-
-	@GetMapping("/coffee")
-	String getNameAndCoffee() {
-		return greeting.getCoffee();
-	}
-}
