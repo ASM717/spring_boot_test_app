@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class TestApplication {
 
 	public static void main(String[] args) {
@@ -100,7 +103,6 @@ class DataLoader {
 	public DataLoader(CoffeeRepository coffeeRepository) {
 		this.coffeeRepository = coffeeRepository;
 	}
-
 	@PostConstruct
 	private void loadData() {
 		coffeeRepository.saveAll(List.of(
@@ -115,7 +117,8 @@ class DataLoader {
 // Mirage — для случаев, когда
 // переменная не описана в объекте Environment приложения
 @RestController
-@RequestMapping("/greeting")
+//@RequestMapping("/greeting")
+@ConfigurationProperties(prefix = "greeting")
 class Greeting {
 	@Value("${greeting-name: Mirage}")
 	private String name;
@@ -123,13 +126,40 @@ class Greeting {
 	@Value("${greeting-coffee:}")
 	private String coffee;
 
-	@GetMapping("/coffee")
-	public String getNameAndCoffee() {
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCoffee() {
 		return coffee;
 	}
 
+	public void setCoffee(String coffee) {
+		this.coffee = coffee;
+	}
+}
+
+@RestController
+@RequestMapping("/greeting")
+class GreetingController {
+	private final Greeting greeting;
+
+
+	GreetingController(Greeting greeting) {
+		this.greeting = greeting;
+	}
+
 	@GetMapping
-	public String getName() {
-		return name;
+	String getGreeting() {
+		return greeting.getName();
+	}
+
+	@GetMapping("/coffee")
+	String getNameAndCoffee() {
+		return greeting.getCoffee();
 	}
 }
